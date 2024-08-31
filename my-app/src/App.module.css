@@ -1,0 +1,58 @@
+.app {
+    /* text-align: center; */
+    width: 700px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+}
+
+.todos {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.wrapPanel {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+
+.active {
+    background-color: #555;
+    color: white;
+    border: 1px solid black;
+}
+.active::after {
+    content: ' ⬇︎';
+}
+
+.loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25px;
+    height: 25px;
+    border: 5px solid gray;
+    border-radius: 50%;
+    border-left-color: transparent;
+    animation: loader 1s infinite;
+}
+
+@keyframes loader {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.listTodos {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
