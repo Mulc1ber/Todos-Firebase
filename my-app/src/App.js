@@ -13,10 +13,10 @@ import { debounce } from 'lodash';
 import { Input } from './Components/Input/Input';
 
 export const App = () => {
-    const [listTodos, setListTodos] = useState([]);
+    const [listTodos, setListTodos] = useState({});
     const [refreshTodosFlag, setRefreshTodosFlag] = useState(false);
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [inputTodo, setInputTodo] = useState('');
     const [hasSort, setHasSort] = useState(false);
 
@@ -29,8 +29,8 @@ export const App = () => {
     const { requestGetTodos } = useRequestGetTodos();
     const { requestSearchTodos } = useRequestSearchTodos(refreshTodos);
     const { requestSortTodos } = useRequestSortTodos(refreshTodos);
-    const { isCreating, requestAddTodo } = useRequestAddTodo(refreshTodos);
-    const { isDeleting, requestDeteleTodo } = useRequestDeleteTodo(refreshTodos);
+    const { isCreating, requestAddTodo } = useRequestAddTodo();
+    const { isDeleting, requestDeteleTodo } = useRequestDeleteTodo();
 
     useEffect(() => {
         if (searchValue.length > 0) {
@@ -41,7 +41,9 @@ export const App = () => {
     }, [refreshTodosFlag]);
 
     const handleSort = () => {
-        requestSortTodos(hasSort, setListTodos);
+        console.log(listTodos);
+
+        requestSortTodos(hasSort, listTodos, setListTodos);
         setHasSort(!hasSort);
     };
 

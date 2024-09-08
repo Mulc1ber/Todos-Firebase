@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { ref, push } from 'firebase/database'
+import { db } from '../firebase'
 
-export const useRequestAddTodo = (refreshTodos) => {
+export const useRequestAddTodo = () => {
     const [isCreating, setIsCreating] = useState(false);
 
     const requestAddTodo = (inputTodo, setInputTodo) => {
@@ -11,17 +13,12 @@ export const useRequestAddTodo = (refreshTodos) => {
 
         setIsCreating(true);
 
-        fetch('http://localhost:3005/todos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json;charset=utf-8' },
-            body: JSON.stringify({
-                title: inputTodo,
-            }),
-        })
-            .then((rawResponse) => rawResponse.json())
+
+        const createDbRef = ref(db, 'todos');
+
+        push(createDbRef, {title: inputTodo})
             .then((response) => {
                 console.log('Задача создана:', response);
-                refreshTodos();
             })
             .finally(() => {
                 setIsCreating(false);

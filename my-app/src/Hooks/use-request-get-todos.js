@@ -6,7 +6,7 @@ export const useRequestGetTodos = () => {
         const todosDbRef = ref(db, 'todos');
 
         return onValue(todosDbRef, (snapshot) => {
-            const loadedTodos = snapshot.val() || [];
+            const loadedTodos = snapshot.val() || {};
 
             setListTodos(loadedTodos);
             setIsLoading(false);

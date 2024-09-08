@@ -1,11 +1,12 @@
+import { ref, update } from 'firebase/database'
+import { db } from '../firebase'
+
 export const useRequestUpdateTodo = () => {
     const requestUpdateTodo = (id, updatedData) => {
-        fetch(`http://localhost:3005/todos/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json;charset=utf-8' },
-            body: JSON.stringify({ title: updatedData }),
-        })
-            .then((rawResponse) => rawResponse.json())
+
+        const updataDbRef = ref(db, `todos/${id}`);
+
+        update(updataDbRef, {title: updatedData})
             .then((response) => {
                 console.log('Обновление задачи:', response);
             });
