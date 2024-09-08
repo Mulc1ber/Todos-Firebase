@@ -11,6 +11,7 @@ import {
 import styles from './App.module.css';
 import { debounce } from 'lodash';
 import { Input } from './Components/Input/Input';
+import { filteredObjects } from './utils/filtered';
 
 export const App = () => {
     const [listTodos, setListTodos] = useState({});
@@ -29,41 +30,41 @@ export const App = () => {
     const { requestGetTodos } = useRequestGetTodos();
     const { requestSearchTodos } = useRequestSearchTodos(refreshTodos);
     const { requestSortTodos } = useRequestSortTodos(refreshTodos);
-    const { isCreating, requestAddTodo } = useRequestAddTodo();
-    const { isDeleting, requestDeteleTodo } = useRequestDeleteTodo();
+    const { isCreating, requestAddTodo } = useRequestAddTodo(refreshTodos);
+    const { isDeleting, requestDeteleTodo } = useRequestDeleteTodo(refreshTodos);
 
     useEffect(() => {
         if (searchValue.length > 0) {
-            requestSearchTodos(searchValue, setListTodos);
+            console.log('searchValue', searchValue);
+            requestSearchTodos(searchValue, listTodos, setFilteredTasks);
+        } else if (searchTerm.length > 0) {
+            handleSearch(searchTerm);
         } else {
             requestGetTodos(setListTodos, setIsLoading);
+        }
+        if (hasSort) {
+            setHasSort(!hasSort);
         }
     }, [refreshTodosFlag]);
 
     const handleSort = () => {
-        console.log(listTodos);
-
         requestSortTodos(hasSort, listTodos, setListTodos);
         setHasSort(!hasSort);
     };
 
     const handleSearch = debounce((searchTerm) => {
-        const filtered = listTodos.filter((task) =>
-            task.title.toLowerCase().includes(searchTerm.toLowerCase()),
-        );
+        const filtered = filteredObjects(listTodos, searchTerm);
         setFilteredTasks(filtered);
     }, 300);
 
     const handleChange = ({ target }) => {
         setSearchTerm(target.value);
         handleSearch(target.value);
-        console.log(searchTerm);
-        console.log('listTodos: ', listTodos);
     };
 
     const handleSearchValue = ({ target }) => {
         setSearchValue(target.value);
-        requestSearchTodos(target.value, setListTodos);
+        requestSearchTodos(target.value, listTodos, setFilteredTasks);
     };
 
     return (
@@ -113,7 +114,7 @@ export const App = () => {
                     {isLoading ? (
                         <div className={styles.loader}></div>
                     ) : (
-                        (searchTerm.length !== 0
+                        (searchTerm.length !== 0 || searchValue.length !== 0
                             ? Object.entries(filteredTasks)
                             : Object.entries(listTodos)
                         ).map(([id, { title }], index) => (

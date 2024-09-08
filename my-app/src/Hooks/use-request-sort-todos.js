@@ -1,3 +1,5 @@
+import { forEach } from 'lodash';
+
 export const useRequestSortTodos = (refreshTodos) => {
     const requestSortTodos = (sortTodos, listTodos, setListTodos) => {
         if (sortTodos) {
@@ -5,30 +7,19 @@ export const useRequestSortTodos = (refreshTodos) => {
             return;
         }
 
-        // console.log(listTodos);
-        console.log(Object.values(listTodos));
+        console.log('listTodos in SORT', listTodos);
+        const keysTodos = Object.keys(listTodos);
+        keysTodos.sort((a, b) => {
+            return listTodos[a].title.localeCompare(listTodos[b].title);
+        });
 
+        let sortedListTodos = {};
 
-        // let sortedKeys = Object.values(listTodos).sort((a,b) => listTodos[a].title - listTodos[b].title)
+        keysTodos.forEach((key) => {
+            sortedListTodos[key] = listTodos[key];
+        });
 
-        // let sorted = sortedKeys.reduce((accum, key) => {
-        //     accum[key] = listTodos[key]
-        //     return accum
-        // }, {})
-
-        // console.log(sorted);
-
-
-        // console.log(listSort);
-
-        // setListTodos(listSort)
-
-        // fetch('http://localhost:3005/todos?_sort=title')
-        //     .then((rawResponse) => rawResponse.json())
-        //     .then((response) => {
-        //         // console.log('Сортировка задач:', response);
-        //         setListTodos(response);
-        //     });
+        setListTodos(sortedListTodos);
     };
 
     return {

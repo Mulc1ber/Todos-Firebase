@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ref, remove } from 'firebase/database';
-import { db } from '../firebase'
+import { db } from '../firebase';
 
-export const useRequestDeleteTodo = () => {
+export const useRequestDeleteTodo = (refreshTodos) => {
     const [isDeleting, setIsDeleting] = useState(false);
 
     const requestDeteleTodo = (id) => {
@@ -13,11 +13,11 @@ export const useRequestDeleteTodo = () => {
         remove(delDbRef)
             .then((response) => {
                 console.log('Задача удалена:', response);
+                refreshTodos();
             })
             .finally(() => {
                 setIsDeleting(false);
             });
-
     };
 
     return {
