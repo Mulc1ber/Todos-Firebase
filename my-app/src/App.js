@@ -69,7 +69,7 @@ export const App = () => {
 
     return (
         <div className={styles.app}>
-            <h1 className={styles.header}>Todos JSON Server</h1>
+            <h1 className={styles.header}>Todos Firebase</h1>
             <div className={styles.todos}>
                 <div className={styles.wrapPanel}>
                     <Input
